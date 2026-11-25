@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tari's Table</title>
+<style>
+body{margin:0;background:#fbeef2;color:#6e1229;font-family:Georgia,"Times New Roman",serif;padding-bottom:96px}
+header{text-align:center;padding:28px 16px 12px}
+h1{font-size:2.4rem;margin:0;font-weight:600}
+.tag{letter-spacing:.25em;font-size:.72rem;color:#b0556f;margin-top:6px;text-transform:uppercase}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+.mode{display:flex;gap:8px;margin:18px 0 8px}
+.mode button{flex:1;padding:10px;border-radius:999px;border:1px solid #e9b8c8;background:#fff;color:#6e1229;font:inherit;cursor:pointer}
+.mode button.on{background:#7a1530;color:#fff;border-color:#7a1530}
+.center{text-align:center;color:#b0556f;font-size:.9rem;margin:6px 0}
+.section{display:flex;align-items:center;gap:10px;margin:22px 0 10px}
+.section::before,.section::after{content:"";flex:1;height:1px;background:#e9b8c8}
+.section span{background:#f4c2d7;padding:4px 18px;border-radius:999px;letter-spacing:.3em;font-size:.85rem;color:#7a1530}
+.item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:1px solid #e9b8c8;border-radius:14px;padding:12px 14px;margin-bottom:8px}
+.name{font-size:1rem}
+.sub{font-size:.8rem;color:#b0556f}
+.gf{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#7a1530;margin-left:6px}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:32px;height:32px;border-radius:50%;border:1px solid #e9b8c8;background:#f4c2d7;color:#7a1530;font-size:1.1rem;cursor:pointer}
+.qty button:disabled{opacity:.35}
+form{background:#fff;border:1px solid #e9b8c8;border-radius:14px;padding:16px;margin-top:18px}
+label{display:block;font-size:.85rem;color:#b0556f;margin:10px 0 4px}
+input,select,textarea{width:100%;padding:10px;font:inherit;border-radius:10px;border:1px solid #e9b8c8;background:#fbeef2;color:#6e1229}
+.check{display:flex;gap:8px;align-items:center;font-size:.9rem;color:#6e1229;margin:8px 0}
+.check input{width:auto}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#7a1530;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;border:0;font:inherit;font-size:1rem;cursor:pointer}
+.bar:disabled{background:#9a8a8f;cursor:default}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tari's Table</h1>
+  <div class="tag">Homemade · Fresh · Made with love</div>
+</header>
+<div class="wrap">
+  <div class="mode">
+    <button id="bWeekly" class="on">Weekday Dinners</button>
+    <button id="bShabbos">Shabbos</button>
+  </div>
+  <p class="center" id="weekOf"></p>
+  <label class="check"><input type="checkbox" id="gfOnly"> Show gluten free only</label>
+  <div id="menu"><p class="center">Loading menu…</p></div>
+
+  <form id="orderForm" hidden>
+    <h3 id="formTitle" style="margin:0 0 4px;color:#7a1530"></h3>
+    <label for="name">Name</label>
+    <input id="name" required>
+    <label for="phone">Phone</label>
+    <input id="phone" type="tel" required>
+    <label id="whenLabel" for="when"></label>
+    <select id="when"></select>
+    <label for="notes">Notes (allergies, address, etc.)</label>
+    <textarea id="notes" rows="2"></textarea>
+  </form>
+</div>
+<button class="bar" id="bar" disabled><span id="barCount">Your order is empty</span><span>Send order →</span></button>
+
+<script>
+// Change to Tari's WhatsApp number, digits only, with country code
+const TARI_PHONE = "15555555555";
+const DELIVERY_FEE = 10;
+const DAYS = {
+  weekly: ["Monday", "Wednesday"],
+  shabbos: ["Thursday (pickup)", "Friday morning (delivery)", "Friday afternoon (delivery)"]
+};
+const LABEL = { weekly: "Delivery day", shabbos: "Delivery window" };
+
+let data = { weekOf: "", dishes: [] };
+let mode = "weekly";
+let cart = {}; // index in data.dishes -> quantity
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function visible() {
+  const gf = $("gfOnly").checked;
+  return data.dishes
+    .map((d, i) => ({ ...d, i }))
+    .filter(d => d.menu === mode && d.available && (!gf || d.gf));
+}
+
+function render() {
+  const isShabbos = mode === "shabbos";
+  $("weekOf").textContent = isShabbos ? "Shabbos menu" : data.weekOf;
+  $("orderForm").hidden = false;
+  $("formTitle").textContent = isShabbos ? "Shabbos details" : "Weekday dinner details";
+  $("whenLabel").textContent = LABEL[mode];
+  $("when").innerHTML = DAYS[mode].map(d => `<option>${esc(d)}</option>`).join("");
+
+  const list = visible();
+  if (!list.length) {
+    $("menu").innerHTML = '<p class="center">Nothing is available right now. Check back soon!</p>';
+  } else {
+    let html = "";
+    for (const [cat, title] of [["food", "FOOD"], ["salad", "SALADS"]]) {
+      const group = list.filter(d => d.cat === cat);
+      if (!group.length) continue;
+      html += `<div class="section"><span>${title}</span></div>`;
+      for (const d of group) {
+        const n = cart[d.i] || 0;
+        html += `<div class="item">
+          <div><div class="name">${esc(d.name)}${d.gf ? '<span class="gf">GF</span>' : ""}</div>
+          <div class="sub">$${esc(d.price)}${d.serves ? " · serves " + esc(d.serves) : ""}</div></div>
+          <div class="qty">
+            <button data-i="${d.i}" data-d="-1" ${n === 0 ? "disabled" : ""}>−</button>
+            <span>${n}</span>
+            <button data-i="${d.i}" data-d="1">+</button>
+          </div></div>`;
+      }
+    }
+    $("menu").innerHTML = html;
+  }
+  updateBar();
+}
+
+function updateBar() {
+  const entries = Object.entries(cart).filter(([, q]) => q > 0);
+  const sub = entries.reduce((s, [i, q]) => s + data.dishes[i].price * q, 0);
+  const n = entries.reduce((s, [, q]) => s + q, 0);
+  $("barCount").textContent = n ? `${n} item${n > 1 ? "s" : ""} · $${sub + DELIVERY_FEE} incl. $${DELIVERY_FEE} delivery` : "Your order is empty";
+  $("bar").disabled = n === 0;
+}
+
+$("menu").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-i]");
+  if (!b) return;
+  const i = Number(b.dataset.i);
+  cart[i] = Math.max(0, (cart[i] || 0) + Number(b.dataset.d));
+  render();
+});
+
+$("gfOnly").addEventListener("change", render);
+
+function setMode(m) {
+  mode = m;
+  cart = {};
+  $("bWeekly").classList.toggle("on", m === "weekly");
+  $("bShabbos").classList.toggle("on", m === "shabbos");
+  render();
+}
+$("bWeekly").addEventListener("click", () => setMode("weekly"));
+$("bShabbos").addEventListener("click", () => setMode("shabbos"));
+
+$("bar").addEventListener("click", () => {
+  if (!$("orderForm").reportValidity()) return;
+  const entries = Object.entries(cart).filter(([, q]) => q > 0);
+  const lines = entries.map(([i, q]) => `${q} x ${data.dishes[i].name} ($${data.dishes[i].price * q})`);
+  const sub = entries.reduce((s, [i, q]) => s + data.dishes[i].price * q, 0);
+  const msg = [
+    mode === "shabbos" ? "SHABBOS ORDER" : `WEEKDAY DINNER ORDER (${data.weekOf})`,
+    `Name: ${$("name").value}`,
+    `Phone: ${$("phone").value}`,
+    `${LABEL[mode]}: ${$("when").value}`,
+    "",
+    ...lines,
+    "",
+    `Items: $${sub}`,
+    `Delivery: $${DELIVERY_FEE}`,
+    `Total: $${sub + DELIVERY_FEE}`,
+    $("gfOnly").checked ? "Gluten free: please show GF options only" : "",
+    $("notes").value ? `Notes: ${$("notes").value}` : ""
+  ].join("\n");
+  window.open(`https://wa.me/${TARI_PHONE}?text=${encodeURIComponent(msg)}`, "_blank");
+});
+
+// Load the weekly menu from menu.json (Tari edits this file on GitHub)
+fetch("menu.json?" + Date.now())
+  .then(r => r.json())
+  .then(d => { data = d; render(); })
+  .catch(() => { $("menu").innerHTML = '<p class="center">The menu can\'t load right now. Please try again later.</p>'; });
+</script>
+</body>
+</html>
