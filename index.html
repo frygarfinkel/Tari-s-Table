@@ -159,18 +159,9 @@ input:focus,textarea:focus{border-color:var(--accent)}
     </div>
 
     <div class="card" id="lines"></div>
-    <div class="card" style="padding:12px 16px">
-      <div class="sum"><span>Items</span><span id="sSub"></span></div>
-      <div class="sum"><span>Delivery</span><span id="sDel"></span></div>
-      <div class="sum total"><span>Total</span><span id="sTot"></span></div>
-    </div>
 
     <form id="form" novalidate>
       <div class="card" style="padding:4px 16px 16px">
-        <span class="lbl" id="dayLabel"></span>
-        <div class="days" id="days" role="radiogroup" aria-labelledby="dayLabel"></div>
-        <div class="err" id="dayErr"></div>
-
         <label for="name">Your name</label>
         <input id="name" autocomplete="name" required>
         <label for="phone">Phone</label>
@@ -193,6 +184,16 @@ input:focus,textarea:focus{border-color:var(--accent)}
           <input id="allergies" placeholder="e.g. nuts, sesame, dairy" tabindex="-1">
         </div></div>
         <div class="err" id="formErr"></div>
+      </div>
+      <div class="card" style="padding:4px 16px 16px">
+        <span class="lbl" id="dayLabel"></span>
+        <div class="days" id="days" role="radiogroup" aria-labelledby="dayLabel"></div>
+        <div class="err" id="dayErr"></div>
+        <div style="border-top:1px solid var(--line);margin-top:6px;padding-top:10px">
+          <div class="sum"><span>Items</span><span id="sSub"></span></div>
+          <div class="sum"><span>Delivery</span><span id="sDel"></span></div>
+          <div class="sum total"><span>Total</span><span id="sTot"></span></div>
+        </div>
       </div>
       <button class="send" type="submit">Send order on WhatsApp</button>
       <p class="fine">WhatsApp opens with your order written out. Just tap send.</p>
@@ -246,8 +247,8 @@ function renderMenu() {
   $("tWeekly").setAttribute("aria-selected", !isShabbos);
   $("tShabbos").setAttribute("aria-selected", isShabbos);
   $("infoText").innerHTML = isShabbos
-    ? `<b>Shabbos menu</b> · Friday delivery · ${money(DELIVERY_FEE)}`
-    : `<b>${esc(data.weekOf || "This week")}</b> · Mon & Wed delivery · ${money(DELIVERY_FEE)}`;
+    ? `<b>Shabbos menu</b>`
+    : `<b>${esc(data.weekOf || "This week")}</b>`;
   $("gfChip").checked = gfOnly;
   $("gfChip2").checked = gfOnly;
   // Gluten free doesn't hide any dishes. It only tells Tari the order needs to be gluten free.
@@ -284,7 +285,7 @@ function renderBar() {
   const n = itemCount();
   $("bar").classList.toggle("show", n > 0);
   $("barCount").textContent = n;
-  $("barTotal").textContent = money(subtotal() + DELIVERY_FEE);
+  $("barTotal").textContent = money(subtotal());
 }
 
 function change(i, delta) {
