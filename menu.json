@@ -1,13 +1,26 @@
 {
   "weekOf": "Week of Nov 30",
   "dishes": [
-    { "name": "Cauliflower Soup", "menu": "weekly", "cat": "food", "price": null, "serves": null, "gf": false, "available": false },
-    { "name": "Chicken Fajitas", "menu": "weekly", "cat": "food", "price": null, "serves": null, "gf": false, "available": false },
-    { "name": "Rice", "menu": "weekly", "cat": "food", "price": null, "serves": null, "gf": false, "available": false },
-    { "name": "Hasselback Salami – Small", "menu": "shabbos", "cat": "food", "price": 55, "serves": null, "gf": false, "available": true },
-    { "name": "Hasselback Salami – Medium", "menu": "shabbos", "cat": "food", "price": 75, "serves": null, "gf": false, "available": true },
-    { "name": "Deli Roll Pockets (12)", "menu": "shabbos", "cat": "food", "price": 65, "serves": null, "gf": false, "available": true },
-    { "name": "Franks & Blanks on a Stick (10)", "menu": "shabbos", "cat": "food", "price": 65, "serves": null, "gf": false, "available": true },
+    { "name": "Chicken Fajitas (9x13)", "menu": "weekly", "cat": "main", "price": 80, "serves": 12, "gf": false, "available": true },
+    { "name": "Rice (9x13)", "menu": "weekly", "cat": "side", "price": 45, "serves": 12, "gf": false, "available": true },
+    { "name": "Soup", "menu": "weekly", "cat": "soup", "price": 35, "serves": null, "gf": false, "available": true },
+
+    { "name": "Hasselback Salami – Small", "menu": "shabbos", "cat": "appetizer", "price": 55, "serves": null, "gf": false, "available": true },
+    { "name": "Hasselback Salami – Medium", "menu": "shabbos", "cat": "appetizer", "price": 75, "serves": null, "gf": false, "available": true },
+    { "name": "Deli Roll Pockets (12)", "menu": "shabbos", "cat": "appetizer", "price": 65, "serves": null, "gf": false, "available": true },
+    { "name": "Franks & Blanks on a Stick (10)", "menu": "shabbos", "cat": "appetizer", "price": 65, "serves": null, "gf": false, "available": true },
+    { "name": "Wontons (20)", "menu": "shabbos", "cat": "appetizer", "price": 65, "serves": null, "gf": false, "available": true },
+    { "name": "Pastrami Egg Rolls (12)", "menu": "shabbos", "cat": "appetizer", "price": 80, "serves": null, "gf": false, "available": true },
+    { "name": "Pulled Beef Egg Rolls (12)", "menu": "shabbos", "cat": "appetizer", "price": 90, "serves": null, "gf": false, "available": true },
+
+    { "name": "Chicken Lo Mein (9x13)", "menu": "shabbos", "cat": "main", "price": 100, "serves": null, "gf": false, "available": true },
+    { "name": "Pulled Beef Gnocchi (9x13)", "menu": "shabbos", "cat": "main", "price": 180, "serves": null, "gf": false, "available": true },
+    { "name": "Salami Mushroom Orzo (9x13)", "menu": "shabbos", "cat": "main", "price": 80, "serves": null, "gf": false, "available": true },
+    { "name": "Overnight Ribs (9x13)", "menu": "shabbos", "cat": "main", "price": 195, "serves": null, "gf": false, "available": true },
+
+    { "name": "Roasted Tomato & Garlic Confit Rice (9x13)", "menu": "shabbos", "cat": "side", "price": 60, "serves": null, "gf": false, "available": true },
+    { "name": "Sesame Noodles (9x13)", "menu": "shabbos", "cat": "side", "price": 55, "serves": null, "gf": false, "available": true },
+
     { "name": "Cauliflower Arugula Salad", "menu": "shabbos", "cat": "salad", "price": 70, "serves": null, "gf": false, "available": true },
     { "name": "Roasted Sweet Potato, Chickpea & Kale Salad", "menu": "shabbos", "cat": "salad", "price": 80, "serves": null, "gf": false, "available": true }
   ]
