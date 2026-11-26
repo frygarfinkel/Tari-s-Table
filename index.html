@@ -47,6 +47,7 @@ h1{font-size:2.5rem;margin:0;font-weight:600;letter-spacing:.01em}
 .reveal{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .3s cubic-bezier(.3,.7,.2,1),opacity .25s}
 .reveal>div{overflow:hidden}
 .reveal.on{grid-template-rows:1fr;opacity:1}
+.gfmsg{margin:8px 0 0;text-align:right;font-size:.8rem;color:var(--accent)}
 
 /* Menu */
 .section{display:flex;align-items:center;gap:10px;margin:22px 0 12px}
@@ -133,6 +134,7 @@ input:focus,textarea:focus{border-color:var(--accent)}
         <span class="track" aria-hidden="true"><span class="knob"></span></span>
       </label>
     </div>
+    <div class="reveal" id="gfNote"><div><p class="gfmsg">✓ We'll let Tari know your order needs to be gluten free.</p></div></div>
   </div>
 
   <main id="menu"><p class="empty">Loading menu…</p></main>
@@ -180,6 +182,11 @@ input:focus,textarea:focus{border-color:var(--accent)}
         <label for="notes">Address & notes</label>
         <textarea id="notes" rows="2" placeholder="Street, apartment, gate code…"></textarea>
 
+        <label class="switch row" for="gfChip2">
+          <span>Gluten free</span>
+          <input type="checkbox" id="gfChip2" role="switch">
+          <span class="track" aria-hidden="true"><span class="knob"></span></span>
+        </label>
         <label class="switch row" for="hasAllergy">
           <span>Any allergies?</span>
           <input type="checkbox" id="hasAllergy" role="switch" aria-controls="allergyBox">
@@ -205,9 +212,9 @@ const TARI_PHONE = "17738441461";   // WhatsApp number, digits only, with countr
 const DELIVERY_FEE = 10;
 const DAYS = {
   weekly: ["Monday", "Wednesday"],
-  shabbos: ["Thursday (pickup)", "Friday morning (delivery)", "Friday afternoon (delivery)"]
+  shabbos: ["Friday"]
 };
-const DAY_LABEL = { weekly: "Delivery day", shabbos: "Delivery window" };
+const DAY_LABEL = { weekly: "Delivery day", shabbos: "Delivery day" };
 // Menu sections, in the order they show. "cat" in menu.json must match one of these.
 const CATS = [["appetizer", "APPETIZERS"], ["soup", "SOUPS"], ["main", "MAINS"], ["food", "FOOD"], ["side", "SIDES"], ["salad", "SALADS"]];
 
@@ -243,17 +250,18 @@ function renderMenu() {
   $("tWeekly").setAttribute("aria-selected", !isShabbos);
   $("tShabbos").setAttribute("aria-selected", isShabbos);
   $("infoText").innerHTML = isShabbos
-    ? `<b>Shabbos menu</b> · ${money(DELIVERY_FEE)} delivery`
-    : `<b>${esc(data.weekOf || "This week")}</b> · Mon & Wed · ${money(DELIVERY_FEE)} delivery`;
+    ? `<b>Shabbos menu</b> · Friday delivery · ${money(DELIVERY_FEE)}`
+    : `<b>${esc(data.weekOf || "This week")}</b> · Mon & Wed delivery · ${money(DELIVERY_FEE)}`;
   $("gfChip").checked = gfOnly;
+  $("gfChip2").checked = gfOnly;
+  $("gfNote").classList.toggle("on", gfOnly);
 
+  // Gluten free doesn't hide any dishes. It only tells Tari the order needs to be gluten free.
   const list = data.dishes.map((d, i) => ({ ...d, i }))
-    .filter(d => d.menu === mode && isSellable(d) && (!gfOnly || d.gf));
+    .filter(d => d.menu === mode && isSellable(d));
 
   if (!list.length) {
-    $("menu").innerHTML = gfOnly
-      ? `<div class="empty"><div class="big">No gluten free dishes this week</div>Turn off the filter to see the full menu.</div>`
-      : `<div class="empty"><div class="big">Nothing on this menu yet</div>Check back soon, the new menu goes up Saturday night.</div>`;
+    $("menu").innerHTML = `<div class="empty"><div class="big">Nothing on this menu yet</div>Check back soon, the new menu goes up Saturday night.</div>`;
   } else {
     let html = "";
     const known = CATS.map(c => c[0]);
@@ -307,7 +315,8 @@ function renderSheet() {
   $("sSub").textContent = money(sub);
   $("sDel").textContent = money(DELIVERY_FEE);
   $("sTot").textContent = money(sub + DELIVERY_FEE);
-  $("dayLabel").textContent = DAY_LABEL[mode];
+  $("dayLabel").textContent = DAY_LABEL[mode] + (mode === "weekly" ? " (delivered that evening)" : "");
+  if (DAYS[mode].length === 1) chosenDay[mode] = DAYS[mode][0];
   $("days").innerHTML = DAYS[mode].map(d =>
     `<button type="button" class="chip" role="radio" aria-checked="${d === chosenDay[mode]}" aria-pressed="${d === chosenDay[mode]}" data-day="${esc(d)}">${esc(d)}</button>`
   ).join("");
@@ -345,7 +354,9 @@ document.addEventListener("click", (e) => {
 function setMode(m) { if (m !== mode) { mode = m; renderMenu(); window.scrollTo({ top: 0, behavior: "smooth" }); } }
 $("tWeekly").addEventListener("click", () => setMode("weekly"));
 $("tShabbos").addEventListener("click", () => setMode("shabbos"));
-$("gfChip").addEventListener("change", () => { gfOnly = $("gfChip").checked; renderMenu(); });
+for (const id of ["gfChip", "gfChip2"]) {
+  $(id).addEventListener("change", () => { gfOnly = $(id).checked; renderMenu(); });
+}
 $("barBtn").addEventListener("click", openSheet);
 $("closeBtn").addEventListener("click", closeSheet);
 $("scrim").addEventListener("click", closeSheet);
@@ -387,7 +398,7 @@ $("form").addEventListener("submit", (e) => {
     `Items: ${money(sub)}`,
     `Delivery: ${money(DELIVERY_FEE)}`,
     `Total: ${money(sub + DELIVERY_FEE)}`,
-    gfOnly ? "Gluten free please" : "",
+    gfOnly ? "GLUTEN FREE: Yes, please make this order gluten free" : "",
     allergies ? `ALLERGIES: ${allergies}` : "",
     notes ? `Address/notes: ${notes}` : ""
   ].join("\n").trim();
