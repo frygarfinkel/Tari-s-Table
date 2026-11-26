@@ -47,8 +47,6 @@ h1{font-size:2.5rem;margin:0;font-weight:600;letter-spacing:.01em}
 .reveal{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .3s cubic-bezier(.3,.7,.2,1),opacity .25s}
 .reveal>div{overflow:hidden}
 .reveal.on{grid-template-rows:1fr;opacity:1}
-.gfmsg{margin:8px 0 0;text-align:right;font-size:.8rem;color:var(--accent)}
-
 /* Menu */
 .section{display:flex;align-items:center;gap:10px;margin:22px 0 12px}
 .section::before,.section::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -133,9 +131,7 @@ input:focus,textarea:focus{border-color:var(--accent)}
         <input type="checkbox" id="gfChip" role="switch">
         <span class="track" aria-hidden="true"><span class="knob"></span></span>
       </label>
-    </div>
-    <div class="reveal" id="gfNote"><div><p class="gfmsg">✓ We'll let Tari know your order needs to be gluten free.</p></div></div>
-  </div>
+    </div>  </div>
 
   <main id="menu"><p class="empty">Loading menu…</p></main>
 
@@ -254,8 +250,6 @@ function renderMenu() {
     : `<b>${esc(data.weekOf || "This week")}</b> · Mon & Wed delivery · ${money(DELIVERY_FEE)}`;
   $("gfChip").checked = gfOnly;
   $("gfChip2").checked = gfOnly;
-  $("gfNote").classList.toggle("on", gfOnly);
-
   // Gluten free doesn't hide any dishes. It only tells Tari the order needs to be gluten free.
   const list = data.dishes.map((d, i) => ({ ...d, i }))
     .filter(d => d.menu === mode && isSellable(d));
