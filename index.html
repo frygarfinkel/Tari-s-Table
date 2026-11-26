@@ -6,32 +6,35 @@
 <title>Tari's Table</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#fbeef2;color:#6e1229;font-family:Georgia,"Times New Roman",serif;padding-bottom:104px;-webkit-text-size-adjust:100%}
-header{text-align:center;padding:14px 16px 8px}
-h1{font-size:1.6rem;margin:0;color:#7a1530;font-weight:600;line-height:1.1}
-.tag{letter-spacing:.18em;font-size:.6rem;color:#b0556f;margin-top:3px;text-transform:uppercase}
-.wrap{max-width:480px;margin:0 auto;padding:0 12px}
-.toggle{display:flex;gap:6px;margin:8px 0 4px}
-.toggle button{flex:1;padding:8px;border-radius:999px;border:1px solid #e9b8c8;background:#fff;color:#6e1229;font:inherit;font-size:.9rem;cursor:pointer}
-.toggle button.on{background:#7a1530;color:#fff;border-color:#7a1530}
-.week{text-align:center;color:#b0556f;font-size:.8rem;margin:4px 0 0}
-.section{margin:14px 0 4px;text-align:center;color:#7a1530;letter-spacing:.2em;font-size:.72rem;text-transform:uppercase}
-.item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border-radius:10px;padding:8px 12px;margin-bottom:5px}
-.name{font-size:.92rem;line-height:1.2}
-.meta{font-size:.74rem;color:#b0556f;margin-top:1px}
-.step{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.step button{width:28px;height:28px;border-radius:50%;border:0;background:#f4c2d7;color:#7a1530;font-size:1.05rem;line-height:1;cursor:pointer}
-.step button:disabled{opacity:.35;cursor:default}
-.step span{min-width:14px;text-align:center;font-size:.9rem}
-.details{background:#fff;border-radius:10px;padding:12px;margin:14px 0 0}
-.details h3{margin:0 0 2px;color:#7a1530;font-size:.9rem;font-weight:600}
-label{display:block;font-size:.74rem;color:#b0556f;margin:8px 0 3px}
-input,textarea{width:100%;padding:8px 10px;font:inherit;font-size:16px;border-radius:8px;border:1px solid #e9b8c8;background:#fbeef2;color:#6e1229;-webkit-appearance:none}
-textarea{min-height:44px;font-size:14px}
-.empty{text-align:center;color:#b0556f;padding:16px 0;font-size:.85rem}
-.bar{position:fixed;left:0;right:0;bottom:0;background:#7a1530;color:#fff;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px))}
-.fee{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:6px}
-.send{width:100%;border:0;border-radius:10px;padding:11px;background:#fff;color:#7a1530;font:inherit;font-size:.95rem;font-weight:600;cursor:pointer}
+body{margin:0;background:#fbeef2;color:#6e1229;font-family:Georgia,"Times New Roman",serif;padding-bottom:92px;-webkit-text-size-adjust:100%}
+header{text-align:center;padding:14px 12px 10px;background:#fff;box-shadow:0 1px 0 #f0d3dd}
+h1{font-size:1.5rem;margin:0;color:#7a1530;font-weight:600;line-height:1.1}
+.tag{letter-spacing:.16em;font-size:.56rem;color:#b0556f;margin-top:3px;text-transform:uppercase}
+.wrap{max-width:480px;margin:0 auto;padding:10px 10px 0}
+.toggle{display:flex;background:#f4c2d7;border-radius:999px;padding:3px}
+.toggle button{flex:1;padding:7px;border-radius:999px;border:0;background:none;color:#7a1530;font:inherit;font-size:.85rem;cursor:pointer}
+.toggle button.on{background:#7a1530;color:#fff}
+.week{text-align:center;color:#b0556f;font-size:.72rem;margin:6px 0 0}
+.section{display:flex;align-items:center;gap:8px;margin:12px 2px 6px;color:#7a1530;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase}
+.section::after{content:"";flex:1;height:1px;background:#e9b8c8}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.item{background:#fff;border-radius:12px;padding:9px 9px 8px;box-shadow:0 1px 2px rgba(122,21,48,.07)}
+.name{font-size:.84rem;line-height:1.25}
+.meta{font-size:.7rem;color:#b0556f;margin-top:2px}
+.add{margin-top:7px;width:100%;padding:6px 0;border-radius:999px;border:1px solid #7a1530;background:#fff;color:#7a1530;font:inherit;font-size:.76rem;cursor:pointer}
+.stepper{margin-top:7px;display:flex;align-items:center;justify-content:space-between;background:#7a1530;color:#fff;border-radius:999px;height:30px}
+.stepper button{width:34px;height:30px;border:0;background:none;color:#fff;font-size:1.05rem;cursor:pointer;padding:0}
+.stepper span{font-size:.82rem;font-weight:600}
+.details{background:#fff;border-radius:12px;padding:12px;margin:12px 0 0;box-shadow:0 1px 2px rgba(122,21,48,.07)}
+.details h3{margin:0 0 4px;color:#7a1530;font-size:.82rem;font-weight:600}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+label{display:block;font-size:.66rem;color:#b0556f;margin:6px 0 2px}
+input,textarea{width:100%;padding:7px 8px;font:inherit;font-size:16px;border-radius:8px;border:1px solid #e9b8c8;background:#fbeef2;color:#6e1229;-webkit-appearance:none}
+textarea{min-height:36px;font-size:14px}
+.empty{text-align:center;color:#b0556f;padding:14px 0;font-size:.82rem}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#7a1530;color:#fff;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));box-shadow:0 -2px 8px rgba(0,0,0,.12)}
+.fee{display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:5px;opacity:.95}
+.send{width:100%;border:0;border-radius:10px;padding:10px;background:#fff;color:#7a1530;font:inherit;font-size:.92rem;font-weight:600;cursor:pointer}
 .send:disabled{background:#9a8a8f;color:#fff;cursor:default}
 </style>
 </head>
@@ -51,12 +54,12 @@ textarea{min-height:44px;font-size:14px}
 
   <div class="details">
     <h3>Your details</h3>
-    <label for="name">Name</label>
-    <input id="name" autocomplete="name" required>
-    <label for="phone">Number</label>
-    <input id="phone" type="tel" autocomplete="tel" required>
+    <div class="row">
+      <div><label for="name">Name</label><input id="name" autocomplete="name" required></div>
+      <div><label for="phone">Number</label><input id="phone" type="tel" autocomplete="tel" required></div>
+    </div>
     <label for="notes">Allergies</label>
-    <textarea id="notes" rows="1" placeholder="Leave blank if none"></textarea>
+    <textarea id="notes" rows="1" placeholder="None"></textarea>
   </div>
 </div>
 
@@ -66,11 +69,10 @@ textarea{min-height:44px;font-size:14px}
 </div>
 
 <script>
-// Tari's WhatsApp number, digits only, with country code
-const TARI_PHONE = "7738441461";
+// Tari's WhatsApp number: country code 1 + 773 844 1461
+const TARI_PHONE = "17738441461";
 const DELIVERY_FEE = 10;
 
-// Section order for each menu
 const SECTIONS = {
   weekly: [["main", "Mains"], ["side", "Sides"], ["soup", "Soups"]],
   shabbos: [["appetizer", "Appetizers"], ["main", "Mains"], ["side", "Sides"], ["salad", "Salads"]]
@@ -89,8 +91,7 @@ function subtotal() {
 function render() {
   $("weekOf").textContent = mode === "shabbos" ? "Shabbos menu" : data.weekOf;
 
-  const list = data.dishes.map((d, i) => ({ ...d, i }))
-    .filter(d => d.menu === mode && d.available);
+  const list = data.dishes.map((d, i) => ({ ...d, i })).filter(d => d.menu === mode && d.available);
 
   if (!list.length) {
     $("menu").innerHTML = '<p class="empty">Nothing is available right now. Check back soon!</p>';
@@ -104,20 +105,19 @@ function render() {
     for (const [cat, title] of sections) {
       const group = cat === null ? list.filter(d => !isKnown(d.cat)) : list.filter(d => d.cat === cat);
       if (!group.length) continue;
-      html += `<div class="section">${title}</div>`;
+      html += `<div class="section">${title}</div><div class="grid">`;
       for (const d of group) {
         const n = cart[d.i] || 0;
+        const control = n === 0
+          ? `<button class="add" data-i="${d.i}" data-d="1">Add</button>`
+          : `<div class="stepper"><button data-i="${d.i}" data-d="-1">−</button><span>${n}</span><button data-i="${d.i}" data-d="1">+</button></div>`;
         html += `<div class="item">
-          <div>
-            <div class="name">${esc(d.name)}</div>
-            <div class="meta">$${esc(d.price)}${d.serves ? " · serves " + esc(d.serves) : ""}</div>
-          </div>
-          <div class="step">
-            <button data-i="${d.i}" data-d="-1" ${n === 0 ? "disabled" : ""}>−</button>
-            <span>${n}</span>
-            <button data-i="${d.i}" data-d="1">+</button>
-          </div></div>`;
+          <div class="name">${esc(d.name)}</div>
+          <div class="meta">$${esc(d.price)}${d.serves ? " · serves " + esc(d.serves) : ""}</div>
+          ${control}
+        </div>`;
       }
+      html += `</div>`;
     }
     $("menu").innerHTML = html;
   }
