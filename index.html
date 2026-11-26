@@ -27,12 +27,17 @@ h1{font-size:1.5rem;margin:0;color:#7a1530;font-weight:600;line-height:1.1}
 .stepper{margin-top:7px;display:flex;align-items:center;justify-content:space-between;background:#7a1530;color:#fff;border-radius:999px;height:30px}
 .stepper button{width:34px;height:30px;border:0;background:none;color:#fff;font-size:1.05rem;cursor:pointer;padding:0}
 .stepper span{font-size:.82rem;font-weight:600}
-.details{background:#fff;border-radius:12px;padding:12px;margin:12px 0 12px;box-shadow:0 1px 2px rgba(122,21,48,.07)}
-.details h3{margin:0 0 4px;color:#7a1530;font-size:.82rem;font-weight:600}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-label{display:block;font-size:.66rem;color:#b0556f;margin:6px 0 2px}
-input,textarea{width:100%;padding:7px 8px;font:inherit;font-size:16px;border-radius:8px;border:1px solid #e9b8c8;background:#fbeef2;color:#6e1229;-webkit-appearance:none;appearance:none}
-textarea{min-height:36px;font-size:14px}
+
+.details{background:#fff;border-radius:12px;padding:14px;margin:14px 0 14px;text-align:left;box-shadow:0 1px 2px rgba(122,21,48,.07)}
+.details h3{margin:0 0 6px;color:#7a1530;font-size:.9rem;font-weight:600;text-align:left}
+.details .field{margin-bottom:8px}
+.details label.lbl{display:block;font-size:.72rem;color:#b0556f;margin:0 0 3px;text-align:left}
+.details input,.details textarea{width:100%;padding:9px 10px;font:inherit;font-size:16px;border-radius:9px;border:1px solid #e9b8c8;background:#fbeef2;color:#6e1229;-webkit-appearance:none;appearance:none;text-align:left}
+.details textarea{min-height:60px;font-size:15px;resize:vertical}
+.check{display:flex;align-items:center;gap:8px;font-size:.9rem;color:#6e1229;margin:6px 0 0;cursor:pointer;text-align:left}
+.check input{width:18px;height:18px;margin:0;flex-shrink:0}
+#allergyBox{margin-top:8px}
+
 .empty{text-align:center;color:#b0556f;padding:14px 0;font-size:.82rem}
 .bar{position:sticky;bottom:0;left:0;right:0;width:100%;background:#7a1530;color:#fff;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));box-shadow:0 -2px 8px rgba(0,0,0,.12);z-index:10}
 .fee{display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:5px;opacity:.95}
@@ -56,12 +61,19 @@ textarea{min-height:36px;font-size:14px}
 
   <div class="details">
     <h3>Your details</h3>
-    <div class="row">
-      <div><label for="name">Name</label><input id="name" autocomplete="name" required></div>
-      <div><label for="phone">Number</label><input id="phone" type="tel" autocomplete="tel" required></div>
+    <div class="field">
+      <label class="lbl" for="name">Name</label>
+      <input id="name" autocomplete="name" required>
     </div>
-    <label for="notes">Allergies</label>
-    <textarea id="notes" rows="1" placeholder="None"></textarea>
+    <div class="field">
+      <label class="lbl" for="phone">Number</label>
+      <input id="phone" type="tel" autocomplete="tel" required>
+    </div>
+    <label class="check"><input type="checkbox" id="hasAllergy"> I have allergies</label>
+    <div id="allergyBox" hidden>
+      <label class="lbl" for="notes">Please list your allergies</label>
+      <textarea id="notes" rows="2"></textarea>
+    </div>
   </div>
 </div>
 
@@ -137,6 +149,12 @@ $("menu").addEventListener("click", (e) => {
   render();
 });
 
+$("hasAllergy").addEventListener("change", () => {
+  const on = $("hasAllergy").checked;
+  $("allergyBox").hidden = !on;
+  if (!on) $("notes").value = "";
+});
+
 function setMode(m) {
   mode = m;
   cart = {};
@@ -152,6 +170,7 @@ $("send").addEventListener("click", () => {
   const entries = Object.entries(cart).filter(([, q]) => q > 0);
   const lines = entries.map(([i, q]) => `${q} x ${data.dishes[i].name} ($${data.dishes[i].price * q})`);
   const sub = subtotal();
+  const allergies = $("hasAllergy").checked ? $("notes").value.trim() : "";
   const msg = [
     mode === "shabbos" ? "SHABBOS ORDER" : `WEEKDAY ORDER (${data.weekOf})`,
     `Name: ${$("name").value}`,
@@ -160,7 +179,7 @@ $("send").addEventListener("click", () => {
     `Items: $${sub}`,
     `Delivery fee: $${DELIVERY_FEE}`,
     `Total: $${sub + DELIVERY_FEE}`,
-    $("notes").value ? `Allergies: ${$("notes").value}` : ""
+    allergies ? `Allergies: ${allergies}` : ""
   ].join("\n");
   window.open(`https://wa.me/${TARI_PHONE}?text=${encodeURIComponent(msg)}`, "_blank");
 });
