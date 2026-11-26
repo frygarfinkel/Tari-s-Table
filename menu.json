@@ -1,12 +1,9 @@
 {
   "weekOf": "Week of Nov 30",
   "dishes": [
-    { "name": "Chicken Fajitas", "menu": "weekly", "cat": "food", "price": null, "serves": null, "gf": false, "available": false },
     { "name": "Cauliflower Soup", "menu": "weekly", "cat": "food", "price": null, "serves": null, "gf": false, "available": false },
+    { "name": "Chicken Fajitas", "menu": "weekly", "cat": "food", "price": null, "serves": null, "gf": false, "available": false },
     { "name": "Rice", "menu": "weekly", "cat": "food", "price": null, "serves": null, "gf": false, "available": false },
-    { "name": "Chicken Fajitas", "menu": "shabbos", "cat": "food", "price": null, "serves": null, "gf": false, "available": false },
-    { "name": "Cauliflower Soup", "menu": "shabbos", "cat": "food", "price": null, "serves": null, "gf": false, "available": false },
-    { "name": "Rice", "menu": "shabbos", "cat": "food", "price": null, "serves": null, "gf": false, "available": false },
     { "name": "Hasselback Salami – Small", "menu": "shabbos", "cat": "food", "price": 55, "serves": null, "gf": false, "available": true },
     { "name": "Hasselback Salami – Medium", "menu": "shabbos", "cat": "food", "price": 75, "serves": null, "gf": false, "available": true },
     { "name": "Deli Roll Pockets (12)", "menu": "shabbos", "cat": "food", "price": 65, "serves": null, "gf": false, "available": true },
